@@ -2,11 +2,16 @@
 
 namespace App\Livewire\Projects;
 
-use Livewire\Attributes\Validate;
+use Flux\Flux;
 use Livewire\Component;
+use Livewire\WithFileUploads;
+use App\Services\ProjectService;
+use Livewire\Attributes\Validate;
 
 class FormModal extends Component
 {
+    use WithFileUploads;
+
     #[Validate('required|string|min:2|max:100')]
     public $name = null;
 
@@ -22,11 +27,15 @@ class FormModal extends Component
     #[Validate('nullable|image|max:5120')]
     public $project_logo = null;
 
-    public function saveProject()
+    public function saveProject(ProjectService $projectService)
     {
         $validatedProjectRequest = $this->validate();
 
+        $projectService->saveProject($validatedProjectRequest);
 
+        $this->reset();
+
+        Flux::modal('project-modal')->close();
     }
 
     public function render()
