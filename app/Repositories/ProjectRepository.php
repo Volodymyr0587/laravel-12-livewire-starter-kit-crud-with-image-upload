@@ -14,8 +14,18 @@ class ProjectRepository
         //
     }
 
-    public function saveProject($projectRequest)
+    /**
+     * Summary of saveProject
+     * @param array $projectRequest
+     * @return Project
+     */
+    public function saveProject($projectRequest): Project
     {
         return Project::create($projectRequest);
+    }
+
+    public function getProjectQuery()
+    {
+        return Project::query();
     }
 }

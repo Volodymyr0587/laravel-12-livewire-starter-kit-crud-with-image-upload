@@ -35,6 +35,11 @@ class FormModal extends Component
 
         $this->reset();
 
+        $this->dispatch('flash', [
+            'message' => 'Project created successfully!',
+            'type' => 'success',
+        ]);
+
         Flux::modal('project-modal')->close();
     }
 
