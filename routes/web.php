@@ -20,7 +20,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 
-    Route::get('projects', fn () => 'projects')->name('projects');
+    Route::get('projects', App\Livewire\Projects\Index::class)->name('projects');
 });
 
 require __DIR__.'/auth.php';
