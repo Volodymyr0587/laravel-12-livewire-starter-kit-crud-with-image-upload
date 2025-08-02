@@ -118,6 +118,11 @@
         </table>
     </div>
 
+    {{-- Pagination --}}
+    <div class="mt-4">
+        {{ $projects->links() }}
+    </div>
+
     {{-- Delete Project Modal --}}
     <flux:modal name="delete-project" class="min-w-[25rem]">
         <div class="space-y-6">

@@ -19,7 +19,7 @@ class Index extends Component
     {
         return $projectService->getAllProjects()
             ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->paginate(5);
     }
 
     #[On('refresh-project-listing')]
