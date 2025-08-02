@@ -3,6 +3,7 @@
 namespace App\Livewire\Projects;
 
 use Flux\Flux;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Carbon;
@@ -28,6 +29,13 @@ class FormModal extends Component
     #[Validate('nullable|image|max:5120')]
     public $project_logo = null;
 
+    public $projectId = null;
+
+    public $isView = false;
+
+    public $existingImage = null;
+
+
     public function messages()
     {
         return [
@@ -39,7 +47,11 @@ class FormModal extends Component
     {
         $validatedProjectRequest = $this->validate();
 
-        $projectService->saveProject($validatedProjectRequest);
+        if ($this->projectId) {
+            $projectService->updateProject($this->projectId, $validatedProjectRequest);
+        } else {
+            $projectService->saveProject($validatedProjectRequest);
+        }
 
         $this->reset();
 
@@ -48,7 +60,29 @@ class FormModal extends Component
             'type' => 'success',
         ]);
 
+        $this->dispatch('refresh-project-listing');
+
         Flux::modal('project-modal')->close();
+    }
+
+    #[On('open-project-modal')]
+    public function projectDetail($mode, $project = null)
+    {
+        $this->isView = $mode === 'view';
+
+        if ($mode === 'create') {
+            $this->isView = false;
+            $this->projectId = null;
+            $this->existingImage = null;
+            $this->reset();
+        } else {
+            $this->projectId = $project['id'];
+            $this->name = $project['name'];
+            $this->description = $project['description'];
+            $this->deadline = $project['deadline'];
+            $this->status = $project['status'];
+            $this->existingImage = $project['project_logo'];
+        }
     }
 
     public function render()

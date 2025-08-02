@@ -9,7 +9,9 @@
     {{-- button section --}}
     <div class="text-end mb-4">
         <flux:modal.trigger name="project-modal">
-            <flux:button variant="primary" color="indigo" icon="plus-circle" class="cursor-pointer">
+            <flux:button
+                wire:click="$dispatch('open-project-modal', { mode: 'create' })"
+                variant="primary" color="indigo" icon="plus-circle" class="cursor-pointer">
                 Add Project
             </flux:button>
         </flux:modal.trigger>
@@ -83,13 +85,24 @@
                         {{-- Project modal trigger --}}
                         <flux:modal.trigger name="project-modal">
                             {{-- view --}}
-                            <flux:button variant="primary" color="sky" icon="eye" class="cursor-pointer"></flux:button>
+                            <flux:button
+                                wire:click="$dispatch('open-project-modal', { mode: 'view', project: {{ $project }} })"
+                                variant="primary" color="sky" icon="eye"
+                                class="cursor-pointer">
+                            </flux:button>
                             {{-- edit --}}
-                            <flux:button variant="primary" color="blue" icon="pencil" class="mx-1 cursor-pointer"></flux:button>
+                            <flux:button
+                                wire:click="$dispatch('open-project-modal', { mode: 'edit', project: {{ $project }} })"
+                                variant="primary" color="blue" icon="pencil"
+                                class="mx-1 cursor-pointer">
+                            </flux:button>
                         </flux:modal.trigger>
 
                         {{-- delete --}}
-                        <flux:button variant="primary" color="red" icon="trash" class="cursor-pointer"></flux:button>
+                        <flux:modal.trigger name="delete-project">
+                            <flux:button wire:click="$dispatch('delete-project', { id: {{ $project->id }} })" variant="primary" color="red" icon="trash" class="cursor-pointer"></flux:button>
+                        </flux:modal.trigger>
+
                     </td>
                 </tr>
                 @empty
@@ -105,4 +118,23 @@
         </table>
     </div>
 
+    {{-- Delete Project Modal --}}
+    <flux:modal name="delete-project" class="min-w-[25rem]">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Delete project?</flux:heading>
+                <flux:text class="mt-2">
+                    <p>You're about to delete this project.</p>
+                    <p>This action cannot be reversed.</p>
+                </flux:text>
+            </div>
+            <div class="flex gap-2">
+                <flux:spacer />
+                <flux:modal.close>
+                    <flux:button variant="ghost">Cancel</flux:button>
+                </flux:modal.close>
+                <flux:button wire:click="deleteProject" type="submit" variant="danger">Delete project</flux:button>
+            </div>
+        </div>
+    </flux:modal>
 </div>
